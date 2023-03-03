@@ -1,0 +1,17 @@
+[
+    {
+        "_id": "63ff5e4f968a38ffadba9de7",
+        "title": "REST",
+        "content": "REST stands for REpresentational State Transfer"
+    },
+    {
+        "_id": "63ff5eda968a38ffadba9de9",
+        "title": "CRUD",
+        "content": "Create Read Update Delete"
+    },
+    {
+        "_id": "63ff5f1a968a38ffadba9dea",
+        "title": "CRUD and REST",
+        "content": "The REST equivilant of CRUD is GET, POST, PUT / PATCH AND DELETE"
+    }
+]

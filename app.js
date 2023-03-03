@@ -31,33 +31,72 @@ const articleSchema = mongoose.Schema({
 const Article = mongoose.model("article", articleSchema);
 
 
-// Routes
-app.get('/articles', async (req, res) => {
-    const allArticles = await Article.find();
-    if(allArticles) {
-        res.send(allArticles);
-    } else {
-        res.send({"error": 404});
-    }
-});
-
-app.post('/articles', async (req, res) => {
-    const title = req.body.title;
-    const content = req.body.content;
-
-    const newEntry = new Article({
-        title: title,
-        content: content,
+// All Articles
+app.route('/articles')
+    .get(async (req, res) => {
+        Article.find().then((allArticles) => {
+            res.send(allArticles);
+        }).catch((err)=>{
+            res.send("Error");
+            console.log(err);
+        })
+    })
+    .post( async (req, res) => {
+        const title = req.body.title;
+        const content = req.body.content;
+    
+        const newEntry = new Article({
+            title: title,
+            content: content,
+        });
+    
+        newEntry.save().then(()=>{
+            res.send("Successfully posted new Article");
+        }).catch((err)=>{
+            res.send("Error");
+            console.log(err);
+        })
+    })
+    .delete(async (req, res) => {
+        Article.deleteMany().then(()=> {
+            res.send("Successfully Deleted all Articles");
+        }).catch((err)=>{
+            res.send("Error");
+            console.log(err);
+        })
     });
 
-    newEntry.save().then(()=>{
-        res.send("Success");
-    }).catch((err)=>{
-        res.send("Error");
-        console.log(err);
+// Specific Article
+app.route('/articles/:articleTitle')
+    .get(async (req, res) => {
+        const articleTitle = req.params.articleTitle;
+        Article.findOne({"title": articleTitle }).then((articleResponse)=> {
+            if(articleResponse) {
+                res.send(articleResponse);
+            } else {
+                res.send("Article not found.");
+            }
+        }).catch((error)=> {
+            res.send("Error fetching article");
+            console.log(error);
+        });
     })
-
-})
+    .put(async (req, res) => {
+        const articleTitle = req.params.articleTitle;
+        const title = req.body.title;
+        const content = req.body.content;
+        Article.replaceOne({title: articleTitle}, {title: title, content: content}).then((response) => {
+            if(response) {
+                console.log(response);
+                res.send("Successfully updated article")
+            } else {
+                res.send("Failed to update article");
+            }
+        }).catch((error) => {
+            res.send("Error updating Article")
+            console.log(error);
+        })
+    })
 
 
 // Listener
