@@ -97,6 +97,33 @@ app.route('/articles/:articleTitle')
             console.log(error);
         })
     })
+    .patch(async (req, res) => {
+        const articleTitle = req.params.articleTitle;
+        Article.updateOne({title: articleTitle}, req.body).then((response) => {
+            if(response) {
+                console.log(response);
+                res.send("Successfully patched article");
+            } else {
+                res.send("Failed to patch article");
+            }
+        }).catch((error) => {
+            res.send("Error Patching article");
+            console.log(error);
+        })
+    })
+    .delete(async (req, res) => {
+        const articleTitle = req.params.articleTitle;
+        Article.deleteOne({title: articleTitle}).then((response) => {
+            if(response) {
+                res.send("Successfully deleted this article");
+            } else {
+                res.send("Failed to delete this article")
+            }
+        }).catch((error)=> {
+            res.send("Error deleting this article");
+            console.log(error);
+        });
+    });
 
 
 // Listener
